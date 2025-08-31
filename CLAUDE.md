@@ -18,7 +18,7 @@ Node.js Express template demonstrating modern development practices with:
 
 1. **Copy environment template**: `cp .env.example .env`
 2. **Configure settings** in `.env` (required - fail-fast approach)
-3. **Node.js version**: 20 LTS (specified in .nvmrc and package.json)
+3. **Node.js version**: 22 LTS (specified in .nvmrc and package.json engines)
 
 ## Key Commands
 

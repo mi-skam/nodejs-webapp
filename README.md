@@ -36,7 +36,6 @@ A production-ready Node.js web application template demonstrating modern JavaScr
 - **`Dockerfile`** - Multi-stage build optimized for production
 - **`compose.prod.yml`** - Production container orchestration
 - **`docker-entrypoint.sh`** - Container startup script
-- **`docker-entrypoint.sh`** - Container startup script
 
 ### Quality Assurance
 - **`.eslintrc.js`** - JavaScript linting configuration
@@ -45,7 +44,7 @@ A production-ready Node.js web application template demonstrating modern JavaScr
 
 ## Prerequisites
 
-- Node.js 20 LTS
+- Node.js 22 LTS (or 20+)
 - Docker
 - [just](https://github.com/casey/just) task runner
 

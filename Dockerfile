@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine as builder
+FROM node:22-alpine as builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN npm ci --only=production && npm cache clean --force
 RUN npx prisma generate
 
 # Runtime stage
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 

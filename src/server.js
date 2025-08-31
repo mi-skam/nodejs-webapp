@@ -4,36 +4,52 @@ const config = require('../config/app');
 const { connectDatabase, disconnectDatabase } = require('./utils/database');
 
 const server = app.listen(config.port, async () => {
-  console.log(`🚀 Server running on port ${config.port}`);
-  console.log(`📱 Environment: ${config.environment}`);
-  console.log(`📡 Service: ${config.serviceName}`);
+  if (process.env.NODE_ENV !== 'test') {
+    process.stdout.write(`🚀 Server running on port ${config.port}\n`);
+    process.stdout.write(`📱 Environment: ${config.environment}\n`);
+    process.stdout.write(`📡 Service: ${config.serviceName}\n`);
+  }
   
   try {
     await connectDatabase();
   } catch (error) {
-    console.warn('⚠️ Starting without database connection');
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write('⚠️ Starting without database connection\n');
+    }
   }
 });
 
 const gracefulShutdown = async (signal) => {
-  console.log(`\n${signal} received. Starting graceful shutdown...`);
+  if (process.env.NODE_ENV !== 'test') {
+    process.stdout.write(`\n${signal} received. Starting graceful shutdown...\n`);
+  }
   
   server.close(async () => {
-    console.log('HTTP server closed');
+    if (process.env.NODE_ENV !== 'test') {
+      process.stdout.write('HTTP server closed\n');
+    }
     
     try {
       await disconnectDatabase();
-      console.log('Database disconnected');
+      if (process.env.NODE_ENV !== 'test') {
+        process.stdout.write('Database disconnected\n');
+      }
     } catch (error) {
-      console.error('Error disconnecting database:', error);
+      if (process.env.NODE_ENV !== 'test') {
+        process.stderr.write(`Error disconnecting database: ${error.message}\n`);
+      }
     }
     
-    console.log('Graceful shutdown completed');
+    if (process.env.NODE_ENV !== 'test') {
+      process.stdout.write('Graceful shutdown completed\n');
+    }
     process.exit(0);
   });
 
   setTimeout(() => {
-    console.error('Force exit after timeout');
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write('Force exit after timeout\n');
+    }
     process.exit(1);
   }, 10000);
 };

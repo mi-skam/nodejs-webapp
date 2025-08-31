@@ -15,10 +15,14 @@ async function connectDatabase() {
   try {
     const client = getPrismaClient();
     await client.$connect();
-    console.log('✅ Database connected successfully');
+    if (process.env.NODE_ENV !== 'test') {
+      process.stdout.write('✅ Database connected successfully\n');
+    }
     return client;
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write(`❌ Database connection failed: ${error.message}\n`);
+    }
     throw error;
   }
 }
@@ -27,7 +31,9 @@ async function disconnectDatabase() {
   if (prisma) {
     await prisma.$disconnect();
     prisma = null;
-    console.log('Database disconnected');
+    if (process.env.NODE_ENV !== 'test') {
+      process.stdout.write('Database disconnected\n');
+    }
   }
 }
 

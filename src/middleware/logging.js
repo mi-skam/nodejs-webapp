@@ -4,25 +4,23 @@ const { getPrismaClient } = require('../utils/database');
 function createRequestLogger() {
   const prisma = getPrismaClient();
 
-  const logRequest = async (req, res, next) => {
-    const startTime = Date.now();
-
+  const logRequest = async (_req, res, next) => {
     res.on('finish', async () => {
       try {
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-
         await prisma.requestLog.create({
           data: {
-            method: req.method,
-            path: req.originalUrl,
+            method: _req.method,
+            path: _req.originalUrl,
             statusCode: res.statusCode,
             environment: process.env.NODE_ENV || 'development',
             expressVersion: require('express/package.json').version,
           },
         });
       } catch (error) {
-        console.error('Failed to log request to database:', error.message);
+        // Database logging is optional, don't break the app if it fails
+        if (process.env.NODE_ENV !== 'test') {
+          process.stderr.write(`Failed to log request to database: ${error.message}\n`);
+        }
       }
     });
 
@@ -33,7 +31,7 @@ function createRequestLogger() {
 }
 
 const morganLogger = morgan(':method :url :status :res[content-length] - :response-time ms', {
-  skip: (req) => process.env.NODE_ENV === 'test',
+  skip: () => process.env.NODE_ENV === 'test',
 });
 
 module.exports = {

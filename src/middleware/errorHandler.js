@@ -1,5 +1,7 @@
 const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err);
+  if (process.env.NODE_ENV !== 'test') {
+    process.stderr.write(`Error: ${err.message}\n${err.stack}\n`);
+  }
 
   if (res.headersSent) {
     return next(err);

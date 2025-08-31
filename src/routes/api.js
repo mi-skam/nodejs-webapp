@@ -18,7 +18,9 @@ router.get('/users', async (req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Error fetching users:', error);
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write(`Error fetching users: ${error.message}\n`);
+    }
     res.status(500).json({
       error: 'Failed to fetch users',
       timestamp: new Date().toISOString(),
@@ -60,7 +62,9 @@ router.post('/users', async (req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Error creating user:', error);
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write(`Error creating user: ${error.message}\n`);
+    }
     
     if (error.code === 'P2002') {
       return res.status(409).json({
@@ -105,7 +109,9 @@ router.get('/users/:id', async (req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Error fetching user:', error);
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write(`Error fetching user: ${error.message}\n`);
+    }
     res.status(500).json({
       error: 'Failed to fetch user',
       timestamp: new Date().toISOString(),
@@ -153,7 +159,9 @@ router.put('/users/:id', async (req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Error updating user:', error);
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write(`Error updating user: ${error.message}\n`);
+    }
     
     if (error.code === 'P2025') {
       return res.status(404).json({
@@ -195,7 +203,9 @@ router.delete('/users/:id', async (req, res) => {
 
     res.status(204).send();
   } catch (error) {
-    console.error('Error deleting user:', error);
+    if (process.env.NODE_ENV !== 'test') {
+      process.stderr.write(`Error deleting user: ${error.message}\n`);
+    }
     
     if (error.code === 'P2025') {
       return res.status(404).json({

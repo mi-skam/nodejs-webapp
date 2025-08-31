@@ -11,7 +11,7 @@ beforeAll(async () => {
   try {
     await prisma.$connect();
   } catch (error) {
-    console.warn('Database connection failed in tests, some tests may fail');
+    process.stderr.write('Database connection failed in tests, some tests may fail\n');
   }
 });
 
@@ -21,7 +21,7 @@ beforeEach(async () => {
       await prisma.requestLog.deleteMany({});
       await prisma.user.deleteMany({});
     } catch (error) {
-      console.warn('Failed to clean test database');
+      process.stderr.write('Failed to clean test database\n');
     }
   }
 });

@@ -20,7 +20,7 @@
     "db:seed": "node prisma/seed.js",
     "db:studio": "prisma studio",
     "build": "echo 'No build step required for Node.js'",
-    "prod": "pm2 start ecosystem.config.js --env production"
+    "prod": "NODE_ENV=production node src/server.js"
   },
   "keywords": [
     "nodejs",
@@ -38,8 +38,7 @@
     "helmet": "^7.1.0",
     "morgan": "^1.10.0",
     "dotenv": "^16.3.1",
-    "@prisma/client": "^5.6.0",
-    "pm2": "^5.3.0"
+    "@prisma/client": "^5.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",

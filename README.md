@@ -8,7 +8,7 @@ A production-ready Node.js web application template demonstrating modern JavaScr
 - **Prisma ORM** for database management and type-safe queries
 - **Docker containerization** with multi-stage builds for production deployment
 - **just task automation** for streamlined development workflows
-- **PM2 process management** for production scaling and monitoring
+- **Docker containerization** for production deployment and scaling
 - **Quality assurance tools** including ESLint, Prettier, and Jest testing
 - **GitHub Actions CI/CD** pipeline ready for deployment
 
@@ -35,7 +35,7 @@ A production-ready Node.js web application template demonstrating modern JavaScr
 ### Production Infrastructure  
 - **`Dockerfile`** - Multi-stage build optimized for production
 - **`compose.prod.yml`** - Production container orchestration
-- **`ecosystem.config.js`** - PM2 process management configuration
+- **`docker-entrypoint.sh`** - Container startup script
 - **`docker-entrypoint.sh`** - Container startup script
 
 ### Quality Assurance
@@ -91,7 +91,7 @@ just browser  # Open in browser
 ### Production & Deployment
 | Command | Description |
 |---------|-------------|
-| `just prod` | Run production server with PM2 |
+| `just prod` | Run production server locally |
 | `just prod-container` | Build and run production Docker container |
 | `just build-container` | Build multi-platform Docker image |
 
@@ -268,10 +268,9 @@ just prod-container      # Test production build locally
 
 ### Production Server
 ```bash
-just prod               # Start with PM2 process manager
-pm2 status              # Check process status
-pm2 logs nodejs-webapp  # View logs
-pm2 restart nodejs-webapp # Restart application
+just prod               # Start production server locally
+just prod-container     # Run in Docker container
+docker logs <container> # View container logs
 ```
 
 ## Troubleshooting
@@ -344,7 +343,7 @@ NODE_OPTIONS="--max-old-space-size=4096" npm start
 ### Change Application Name
 1. Update `SERVICE_NAME` in `.env`
 2. Update `name` in `package.json`
-3. Update PM2 app name in `ecosystem.config.js`
+3. Update Docker image tags and container names
 4. Update Docker image tags
 
 ### Add New Services
@@ -387,18 +386,18 @@ Load with: `just dev --env-file .env.staging`
 
 ### Production Optimizations
 - Multi-stage Docker builds minimize image size
-- PM2 clustering for CPU utilization
+- Docker container orchestration for scaling
 - Connection pooling with Prisma
 - Helmet.js for security headers
-- Compression middleware for responses
+- Graceful shutdown handling
 
 ### Monitoring
 ```bash
-# PM2 monitoring
-pm2 monit
-
 # Health checks
 just req health
+
+# Container logs
+docker logs <container-name>
 
 # Database performance
 npx prisma studio
@@ -406,9 +405,9 @@ npx prisma studio
 
 ### Scaling Considerations
 - Horizontal scaling with Docker Swarm or Kubernetes
+- Multiple container instances behind load balancer
 - Database read replicas with Prisma
-- Redis caching layer
-- Load balancing with nginx
+- Redis caching layer for session storage
 
 ## Security Features
 

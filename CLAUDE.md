@@ -10,7 +10,7 @@ Node.js Express template demonstrating modern development practices with:
 - **npm dependency management** for reliable package handling
 - **Docker containerization** with multi-stage builds
 - **just task automation** for streamlined workflows  
-- **PM2 process management** for production scaling
+- **Docker containerization** for production deployment
 - **Comprehensive testing** with Jest and coverage
 - **Quality assurance** with ESLint and Prettier
 
@@ -40,7 +40,7 @@ just check-all        # Run all quality checks (lint + coverage)
 
 ### Production & Deployment  
 ```bash
-just prod             # Run production server with PM2
+just prod             # Run production server locally
 just prod-container   # Build and run production Docker container
 just build-container  # Build multi-platform Docker image
 ```
@@ -106,7 +106,7 @@ Required environment variables in `.env`:
 ├── .eslintrc.js            # ESLint configuration
 ├── .prettierrc             # Prettier configuration
 ├── jest.config.js          # Jest test configuration
-├── ecosystem.config.js     # PM2 configuration
+├── docker-entrypoint.sh    # Container startup script
 ├── compose.yml             # Docker Compose config
 ├── compose.prod.yml        # Production Docker config
 ├── Dockerfile              # Container definition
@@ -192,7 +192,7 @@ just db-studio
 3. **Run checks**: Use `just check-all` before committing
 4. **Database migrations**: Always use `just db-migrate` for schema changes
 5. **CI/CD**: All PRs must pass `just check-all` to merge
-6. **Production**: Use PM2 for process management in production
+6. **Production**: Use Docker containers for production deployment
 
 ## Docker
 
@@ -206,7 +206,7 @@ docker run -p 3000:3000 -e PORT=3000 \
 ### Production Deployment
 ```bash
 docker compose -f compose.prod.yml up   # Run with production config
-just prod                               # Run with PM2 locally
+just prod                               # Run production server locally
 ```
 
 ## Development Workflow

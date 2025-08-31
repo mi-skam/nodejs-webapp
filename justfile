@@ -33,7 +33,7 @@ dev:
     # Start the development server
     npm run dev
 
-# Run production server with PM2
+# Run production server
 [group('run')]
 prod:
     #!/usr/bin/env bash
@@ -43,9 +43,6 @@ prod:
         echo "Waiting for services to be ready..."
         sleep 3
     fi
-    
-    # Create logs directory
-    mkdir -p logs
     
     # Run database migrations
     npx prisma migrate deploy

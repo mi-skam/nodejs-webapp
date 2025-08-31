@@ -18,34 +18,14 @@ services:
     ports:
       - "${PORT}:${PORT}"
     environment:
+      - NODE_ENV=production
       - PORT=${PORT}
-      - FLASK_DEBUG=false
-      - FLASK_ENV=production
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      - POSTGRES_HOST=${POSTGRES_HOST}
       - SERVICE_NAME=${SERVICE_NAME}
-      - HOSTNAME=${HOSTNAME}
-      - APP_STATUS=${APP_STATUS}
-      - HEALTH_STATUS=${HEALTH_STATUS}
-      - DATABASE_STATUS_CONNECTED=${DATABASE_STATUS_CONNECTED}
-      - DATABASE_ERROR_MESSAGE=${DATABASE_ERROR_MESSAGE}
-      - DATABASE_UNAVAILABLE_MESSAGE=${DATABASE_UNAVAILABLE_MESSAGE}
-      - DEPLOYED_WITH=${DEPLOYED_WITH}
-      - REQUEST_HISTORY_LIMIT=${REQUEST_HISTORY_LIMIT}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     depends_on:
       postgres:
         condition: service_healthy
-    command:
-      [
-        "/app/bin/gunicorn",
-        "--bind",
-        ":${PORT}",
-        "--workers",
-        "1",
-        "--threads",
-        "8",
-        "python_example.app:app",
-      ]
+    restart: unless-stopped
 
 volumes:
   postgres_data:

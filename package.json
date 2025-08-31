@@ -1,0 +1,55 @@
+{
+  "name": "nodejs-webapp",
+  "version": "1.0.0",
+  "description": "Node.js web application template with Express, Prisma, and PostgreSQL",
+  "main": "src/server.js",
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src tests --fix",
+    "format": "prettier --write .",
+    "check-all": "npm run lint && npm run test:coverage",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset",
+    "db:seed": "node prisma/seed.js",
+    "db:studio": "prisma studio",
+    "build": "echo 'No build step required for Node.js'",
+    "prod": "pm2 start ecosystem.config.js --env production"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "prisma",
+    "postgresql",
+    "webapp",
+    "template"
+  ],
+  "author": "Maxime",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1",
+    "@prisma/client": "^5.6.0",
+    "pm2": "^5.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0",
+    "prisma": "^5.6.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}

@@ -4,118 +4,144 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Python Flask template demonstrating modern development practices with:
-- **Flask web framework** with PostgreSQL database integration
-- **uv dependency management** for fast package handling
+Node.js Express template demonstrating modern development practices with:
+- **Express.js web framework** with PostgreSQL database integration
+- **Prisma ORM** for database management and type-safe queries
+- **npm dependency management** for reliable package handling
 - **Docker containerization** with multi-stage builds
 - **just task automation** for streamlined workflows  
-- **SQLAlchemy ORM** with automatic request logging
-- **Comprehensive testing** with pytest and coverage
-- **Quality assurance** with ruff linting and mypy type checking
+- **PM2 process management** for production scaling
+- **Comprehensive testing** with Jest and coverage
+- **Quality assurance** with ESLint and Prettier
 
 ## Environment Setup
 
 1. **Copy environment template**: `cp .env.example .env`
 2. **Configure settings** in `.env` (required - fail-fast approach)
-3. **Python version**: 3.12 (specified in pyproject.toml)
+3. **Node.js version**: 20 LTS (specified in .nvmrc and package.json)
 
 ## Key Commands
 
 ### Development Workflow
 ```bash
-just install          # Install dependencies using uv
-just dev              # Start Flask app + PostgreSQL (port 8098)
+just install          # Install dependencies using npm
+just dev              # Start Express app + PostgreSQL (port 3000)
 just req [path]       # Send HTTP request to running server
 just browser          # Open development server in browser
 ```
 
 ### Quality Assurance
 ```bash
-just test             # Run tests with pytest
+just test             # Run tests with Jest
 just cov              # Run tests with coverage reporting  
-just lint             # Run ruff linter and formatter
-just typing           # Run mypy type checking
-just check-all        # Run all quality checks (lint + coverage + typing)
+just lint             # Run ESLint and Prettier
+just check-all        # Run all quality checks (lint + coverage)
 ```
 
 ### Production & Deployment  
 ```bash
-just prod             # Run production server with gunicorn
+just prod             # Run production server with PM2
 just prod-container   # Build and run production Docker container
 just build-container  # Build multi-platform Docker image
 ```
 
 ### Lifecycle Management
 ```bash
-just update           # Update Python dependencies
+just update           # Update npm dependencies
 just fresh            # Clean install from scratch  
 just clear            # Remove temporary files and caches
+```
+
+### Database Management
+```bash
+just db-migrate       # Run database migrations
+just db-reset         # Reset database with fresh migrations
+just db-seed          # Seed database with test data
+just db-studio        # Open Prisma Studio
 ```
 
 ## Configuration
 
 Required environment variables in `.env`:
-- **SERVICE_NAME**: python-uv (application identifier)
-- **PORT**: Application port (8098)
-- **FLASK_ENV**: development or production
+- **SERVICE_NAME**: nodejs-webapp (application identifier)
+- **PORT**: Application port (3000)
+- **NODE_ENV**: development or production
+- **DATABASE_URL**: Full PostgreSQL connection string
 - **POSTGRES_USER/PASSWORD/DB/HOST/PORT**: Database connection settings
-- **_UV_RUN_ARGS_TEST**: Optional test runner args
-- **_UV_RUN_ARGS_SERVE**: Optional server runner args
+- **LOG_LEVEL**: Logging verbosity level
 
 ## Project Structure
 
 ```
 .
 ├── src/
-│   └── python_example/
-│       ├── __init__.py
-│       ├── app.py          # Flask application with database integration
-│       ├── models.py       # SQLAlchemy database models
-│       └── wsgi.py         # WSGI entry point for production
+│   ├── app.js              # Main Express application
+│   ├── server.js           # Server startup with graceful shutdown
+│   ├── routes/
+│   │   ├── index.js        # Main routes (/, /health, /echo)
+│   │   └── api.js          # API endpoints (/api/users)
+│   ├── middleware/
+│   │   ├── logging.js      # Request logging to database
+│   │   └── errorHandler.js # Global error handling
+│   └── utils/
+│       └── database.js     # Database connection utilities
+├── prisma/
+│   ├── schema.prisma       # Database schema
+│   ├── migrations/         # Generated migrations
+│   └── seed.js             # Database seeding
 ├── tests/
-│   ├── __init__.py
-│   └── test_main.py        # Test suite
-├── .github/
-│   └── workflows/
-│       └── ci.yml          # CI/CD pipeline
+│   ├── app.test.js         # Main app tests
+│   ├── routes/
+│   │   ├── index.test.js   # Route tests
+│   │   └── api.test.js     # API endpoint tests
+│   └── setup.js            # Test setup and teardown
+├── config/
+│   ├── database.js         # Database configuration
+│   └── app.js              # Application configuration
+├── .github/workflows/ci.yml# CI/CD pipeline
+├── package.json            # Dependencies and scripts
+├── package-lock.json       # Locked dependencies
+├── justfile                # Task automation
 ├── .env.example            # Environment template
+├── .eslintrc.js            # ESLint configuration
+├── .prettierrc             # Prettier configuration
+├── jest.config.js          # Jest test configuration
+├── ecosystem.config.js     # PM2 configuration
 ├── compose.yml             # Docker Compose config
 ├── compose.prod.yml        # Production Docker config
 ├── Dockerfile              # Container definition
-├── docker-entrypoint.sh    # Container entry point
-├── justfile                # Task automation
-├── pyproject.toml          # Dependencies and config
-├── ruff.toml               # Linter config
-├── mypy.ini                # Type checker config
-└── uv.lock                 # Locked dependencies
+└── docker-entrypoint.sh    # Container entry point
 ```
 
-## Flask Application
+## Express Application
 
-The app (`src/python_example/app.py`) demonstrates database integration:
+The app (`src/app.js` and routes) demonstrates database integration:
 - `/` - System info with request logging to PostgreSQL database
 - `/health` - Health check endpoint  
-- `/echo/<text>` - Echo service with text reversal and length
+- `/echo/:text` - Echo service with text reversal and length
+- `/api/users` - Full CRUD operations for users
 
 **Key Features:**
-- **Database persistence** - All requests are logged to PostgreSQL
-- **Automatic schema creation** - Tables created via SQLAlchemy metadata
+- **Database persistence** - All requests are logged to PostgreSQL via Prisma
+- **Database migrations** - Schema managed via Prisma migrations
 - **Error handling** - Graceful degradation if database unavailable
 - **Request history** - Shows last 10 requests from database
+- **Type safety** - Prisma provides type-safe database queries
 
 ## Testing
 
 ```bash
 just test         # Run all tests
 just cov          # Run tests with coverage report
-just check-all    # Run all checks (lint, coverage, typing)
+just check-all    # Run all checks (lint, coverage)
 ```
 
 ## CI/CD
 
 GitHub Actions workflow (`.github/workflows/ci.yml`):
 - Runs on push/PR to main branch
-- Uses Python 3.12
+- Uses Node.js 20 LTS
+- Sets up PostgreSQL service for testing
 - Executes `just check-all` for quality gates
 - Builds and tests Docker container
 
@@ -123,13 +149,13 @@ GitHub Actions workflow (`.github/workflows/ci.yml`):
 
 ### Missing Environment Variables
 ```
-error: environment variable `VARIABLE_NAME` not present
+Error: Environment variable `VARIABLE_NAME` is not defined
 ```
 **Solution**: Ensure `.env` file exists with all required variables from `.env.example`
 
 ### Port Already in Use
 ```bash
-PORT=8099 just dev  # Use alternative port via environment variable
+PORT=8080 just dev  # Use alternative port via environment variable
 ```
 
 ### Database Connection Issues
@@ -141,6 +167,22 @@ just dev  # Will restart PostgreSQL automatically
 # Clear database volumes if needed
 docker compose down -v
 just dev  # Creates fresh database
+
+# Reset database with migrations
+just db-reset
+just db-seed  # Add test data
+```
+
+### Prisma Issues
+```bash
+# Regenerate Prisma client
+npx prisma generate
+
+# Run pending migrations
+just db-migrate
+
+# View database in browser
+just db-studio
 ```
 
 ## Best Practices
@@ -148,20 +190,23 @@ just dev  # Creates fresh database
 1. **Always use `.env`**: No hardcoded configuration (fail-fast approach)
 2. **Test locally first**: Use `just dev` for development
 3. **Run checks**: Use `just check-all` before committing
-4. **CI/CD**: All PRs must pass `just check-all` to merge
+4. **Database migrations**: Always use `just db-migrate` for schema changes
+5. **CI/CD**: All PRs must pass `just check-all` to merge
+6. **Production**: Use PM2 for process management in production
 
 ## Docker
 
 ### Build and Run
 ```bash
 just build-container                    # Build Docker image
-docker run -p 8080:8080 -e PORT=8080 \
-  $(cat .env | xargs) SERVICE_NAME:GIT_ID  # Run container
+docker run -p 3000:3000 -e PORT=3000 \
+  -e NODE_ENV=production SERVICE_NAME:latest  # Run container
 ```
 
 ### Production Deployment
 ```bash
 docker compose -f compose.prod.yml up   # Run with production config
+just prod                               # Run with PM2 locally
 ```
 
 ## Development Workflow

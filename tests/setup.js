@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+const { getPrismaClient } = require('../src/utils/database');
 
 let prisma = null;
 
@@ -6,7 +6,8 @@ beforeAll(async () => {
   process.env.NODE_ENV = 'test';
   process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/nodejs_webapp_db_test';
   
-  prisma = new PrismaClient();
+  // Use the same singleton instance as the application
+  prisma = getPrismaClient();
   
   try {
     await prisma.$connect();
@@ -18,8 +19,9 @@ beforeAll(async () => {
 beforeEach(async () => {
   if (prisma) {
     try {
-      await prisma.requestLog.deleteMany({});
+      // Clean up test data between tests
       await prisma.user.deleteMany({});
+      await prisma.requestLog.deleteMany({});
     } catch (error) {
       process.stderr.write('Failed to clean test database\n');
     }
@@ -29,6 +31,8 @@ beforeEach(async () => {
 afterAll(async () => {
   if (prisma) {
     await prisma.$disconnect();
+    // Reset the singleton so it can be recreated with new config if needed
+    require('../src/utils/database').resetPrismaClient();
   }
 });
 

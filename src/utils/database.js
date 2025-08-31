@@ -37,6 +37,10 @@ async function disconnectDatabase() {
   }
 }
 
+function resetPrismaClient() {
+  prisma = null;
+}
+
 async function checkDatabaseHealth() {
   try {
     const client = getPrismaClient();
@@ -51,5 +55,6 @@ module.exports = {
   getPrismaClient,
   connectDatabase,
   disconnectDatabase,
+  resetPrismaClient,
   checkDatabaseHealth,
 };
